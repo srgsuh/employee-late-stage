@@ -1,15 +1,15 @@
 import { MutationFunction, useQuery } from "@tanstack/react-query";
 import { Employee, SearchObject } from "../model/dto-types";
 import apiClient from "../services/ApiClientJsonServer";
-import { Avatar, Spinner, Stack, Table, Text, Button} from "@chakra-ui/react";
+import { Avatar, Spinner, Stack, Table} from "@chakra-ui/react";
 import { AxiosError } from "axios";
-import { useColorModeValue } from "../components/ui/color-mode";
 import { FC, useEffect, useMemo } from "react";
 import useEmployeesMutation from "../hooks/useEmployeesMutation";
 import EditField from "./EditField";
 import useEmployeeFilters, { useAuthData, useEmployeesPagination } from "../state-management/store";
 import _ from 'lodash';
 import {pageSize} from '../../config/employees-config.json'
+import AlertDialog from "./AlertDialog.tsx";
 interface Props {
   deleteFn: MutationFunction,
   updateFn: MutationFunction
@@ -26,8 +26,8 @@ const EmployeesTable:FC<Props> = ({deleteFn, updateFn}) => {
   if (_.isEmpty(searchObj)) {
     searchObj = undefined
   }
-  const queryKey: any[] = ["employees"]
-  searchObj && queryKey.push(searchObj)
+  const queryKey: any[] = ["employees"];
+  searchObj && queryKey.push(searchObj);
   const {
     data: employees,
     error,
@@ -40,9 +40,9 @@ const EmployeesTable:FC<Props> = ({deleteFn, updateFn}) => {
   if (error) {
     throw error;
   }
+
   const mutationDel = useEmployeesMutation(deleteFn);
   const mutationUpdate = useEmployeesMutation(updateFn);
-  const bg = useColorModeValue("red.500", "red.200");
   const page = useEmployeesPagination(s => s.page);
   const setCount = useEmployeesPagination(s => s.setCount);
   const setPage = useEmployeesPagination(s => s.setPage);
@@ -113,8 +113,11 @@ const EmployeesTable:FC<Props> = ({deleteFn, updateFn}) => {
                           mutationUpdate.mutate({id: empl.id, fields: data})}/>: empl.salary}
                       </Table.Cell>
                       <Table.Cell hideBelow="md">{empl.birthDate}</Table.Cell>
-                     { userData?.role === "ADMIN" && <Table.Cell >
-                        <Button size="xs" background={bg} onClick={() => mutationDel.mutate(empl.id)} disabled={mutationDel.isPending}>Delete</Button>
+                      { userData?.role === "ADMIN" && <Table.Cell >
+                        <AlertDialog onConfirm = {() => mutationDel.mutate(empl.id)}
+                            isDisabled={mutationDel.isPending}
+                            itemDescription={`the record of employee ${empl.fullName}`}>
+                        </AlertDialog>
                       </Table.Cell>}
                     </Table.Row>
                   ))}
