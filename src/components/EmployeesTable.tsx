@@ -1,7 +1,7 @@
 import { MutationFunction, useQuery } from "@tanstack/react-query";
 import { Employee, SearchObject } from "../model/dto-types";
 import apiClient from "../services/ApiClientJsonServer";
-import { Avatar, Spinner, Stack, Table} from "@chakra-ui/react";
+import {Avatar, HStack, Skeleton, SkeletonCircle, SkeletonText, Spinner, Stack, Table} from "@chakra-ui/react";
 import { AxiosError } from "axios";
 import { FC, useEffect, useMemo } from "react";
 import useEmployeesMutation from "../hooks/useEmployeesMutation";
@@ -10,6 +10,9 @@ import useEmployeeFilters, { useAuthData, useEmployeesPagination } from "../stat
 import _ from 'lodash';
 import {pageSize} from '../../config/employees-config.json'
 import AlertDialog from "./AlertDialog.tsx";
+import SkeletonTable from "./SkeletonTable.tsx";
+
+
 interface Props {
   deleteFn: MutationFunction,
   updateFn: MutationFunction
@@ -67,7 +70,6 @@ const EmployeesTable:FC<Props> = ({deleteFn, updateFn}) => {
     <>
      
         <>
-          {isLoading && <Spinner />}
           <Stack
             height={"100%"}
             justifyContent={"center"}
@@ -95,6 +97,7 @@ const EmployeesTable:FC<Props> = ({deleteFn, updateFn}) => {
                   </Table.Row>
                 </Table.Header>
                 <Table.Body  zIndex="-100">
+                  {isLoading && <SkeletonTable rowCount={6} columnStructure={"CTTTTT"}/>}
                   {employees && getEmployeesOnPage(employees).map((empl) => (
                     <Table.Row key={empl.id} >
                       <Table.Cell hideBelow={"md"}>
