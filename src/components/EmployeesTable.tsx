@@ -9,8 +9,8 @@ import useEmployeeFilters, { useAuthData, useEmployeesPagination } from "../stat
 import _ from 'lodash';
 import {pageSize} from '../../config/employees-config.json'
 import AlertDialog from "./AlertDialog.tsx";
-import SkeletonTable from "./SkeletonTable.tsx";
 import ApiClient, {Updater} from "../services/ApiClient.ts";
+import SkeletonUnit from "./SkeletonUnit.tsx";
 
 
 interface Props {
@@ -99,7 +99,16 @@ const EmployeesTable:FC<Props> = ({apiManager}: Props) => {
                   </Table.Row>
                 </Table.Header>
                 <Table.Body  zIndex="-100">
-                  {isLoading && <SkeletonTable rowCount={6} columnStructure={"CTTTTT"}/>}
+                  {isLoading && Array.from({length: pageSize}, (_, idx) => (
+                    <Table.Row key={idx}>
+                      <Table.Cell hideBelow={"md"}><SkeletonUnit type="circle" /></Table.Cell>
+                      <Table.Cell ><SkeletonUnit type="line" /></Table.Cell>
+                      <Table.Cell ><SkeletonUnit type="line" /></Table.Cell>
+                      <Table.Cell hideBelow="sm"><SkeletonUnit type="line" /></Table.Cell>
+                      <Table.Cell hideBelow="md"><SkeletonUnit type="line" /></Table.Cell>
+                      {userData?.role === "ADMIN" && <Table.Cell ><SkeletonUnit type="line" /></Table.Cell>}
+                    </Table.Row>
+                  ))}
                   {employees && getEmployeesOnPage(employees).map((empl) => (
                     <Table.Row key={empl.id} >
                       <Table.Cell hideBelow={"md"}>

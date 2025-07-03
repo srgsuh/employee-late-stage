@@ -9,13 +9,16 @@ interface AlertDialogProps {
 
 const AlertDialog =
     ({itemDescription, isDisabled, onConfirm}: AlertDialogProps) => {
+
+    const alertBgColor = useColorModeValue("red.500", "red.300");
+    const cancelBgColor = useColorModeValue("gray.700", "gray.400");
     return (
         <Dialog.Root role="alertdialog">
             <Dialog.Trigger asChild>
                 <Button
                     disabled={isDisabled}
                     color={"black"}
-                    background={useColorModeValue("red.500", "red.200")}
+                    background={alertBgColor}
                     variant="outline"
                     size="sm">
                     Delete
@@ -38,9 +41,9 @@ const AlertDialog =
                         </Dialog.Body>
                         <Dialog.Footer>
                             <Dialog.ActionTrigger asChild>
-                                <Button variant="outline">Cancel</Button>
+                                <Button background={cancelBgColor}>Cancel</Button>
                             </Dialog.ActionTrigger>
-                            <Button colorPalette="red" onClick={onConfirm}>Delete</Button>
+                            <Button background={alertBgColor} onClick={onConfirm}>Delete</Button>
                         </Dialog.Footer>
                         <Dialog.CloseTrigger asChild>
                             <CloseButton size="sm" />
