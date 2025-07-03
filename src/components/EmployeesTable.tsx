@@ -1,7 +1,7 @@
 import { MutationFunction, useQuery } from "@tanstack/react-query";
 import { Employee, SearchObject } from "../model/dto-types";
-import apiClient from "../services/ApiClientJsonServer";
-import {Avatar, HStack, Skeleton, SkeletonCircle, SkeletonText, Spinner, Stack, Table} from "@chakra-ui/react";
+//import apiClient from "../services/ApiClientJsonServer";
+import {Avatar, Stack, Table} from "@chakra-ui/react";
 import { AxiosError } from "axios";
 import { FC, useEffect, useMemo } from "react";
 import useEmployeesMutation from "../hooks/useEmployeesMutation";
@@ -11,13 +11,15 @@ import _ from 'lodash';
 import {pageSize} from '../../config/employees-config.json'
 import AlertDialog from "./AlertDialog.tsx";
 import SkeletonTable from "./SkeletonTable.tsx";
+import ApiClient from "../services/ApiClient.ts";
 
 
 interface Props {
   deleteFn: MutationFunction,
-  updateFn: MutationFunction
+  updateFn: MutationFunction,
+  apiManager: ApiClient,
 }
-const EmployeesTable:FC<Props> = ({deleteFn, updateFn}) => {
+const EmployeesTable:FC<Props> = ({deleteFn, updateFn, apiManager}) => {
   const {department, salaryFrom, salaryTo, ageFrom, ageTo} = useEmployeeFilters();
   const userData = useAuthData(s => s.userData);
   let searchObj: SearchObject | undefined = {};
@@ -29,6 +31,7 @@ const EmployeesTable:FC<Props> = ({deleteFn, updateFn}) => {
   if (_.isEmpty(searchObj)) {
     searchObj = undefined
   }
+
   const queryKey: any[] = ["employees"];
   searchObj && queryKey.push(searchObj);
   const {
@@ -37,7 +40,8 @@ const EmployeesTable:FC<Props> = ({deleteFn, updateFn}) => {
     isLoading,
   } = useQuery<Employee[], AxiosError>({
     queryKey,
-    queryFn: () => apiClient.getAll(searchObj),
+    //queryFn: () => apiClient.getAll(searchObj),
+    queryFn: () => apiManager.getAll(searchObj),
     staleTime: 3600_000
   });
   if (error) {
