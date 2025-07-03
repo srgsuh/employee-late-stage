@@ -13,7 +13,7 @@ const HomePage = () => {
      { !!userData &&
       <Stack>
         <Filters></Filters>
-        <EmployeesTable apiManager= {apiClient}></EmployeesTable>
+        <EmployeesTable emplManager= {apiClient}></EmployeesTable>
         <EmployeesPaginiator></EmployeesPaginiator>
       </Stack>
       }

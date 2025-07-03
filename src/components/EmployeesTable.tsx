@@ -9,15 +9,15 @@ import useEmployeeFilters, { useAuthData, useEmployeesPagination } from "../stat
 import _ from 'lodash';
 import {pageSize} from '../../config/employees-config.json'
 import AlertDialog from "./AlertDialog.tsx";
-import ApiClient, {Updater} from "../services/ApiClient.ts";
+import {Updater, ApiClientShort} from "../services/ApiClient.ts";
 import SkeletonUnit from "./SkeletonUnit.tsx";
 
 
 interface Props {
-  apiManager: ApiClient
+  emplManager: ApiClientShort
 }
 
-const EmployeesTable:FC<Props> = ({apiManager}: Props) => {
+const EmployeesTable:FC<Props> = ({emplManager}: Props) => {
   const {department, salaryFrom, salaryTo, ageFrom, ageTo} = useEmployeeFilters();
   const userData = useAuthData(s => s.userData);
   let searchObj: SearchObject | undefined = {};
@@ -38,15 +38,15 @@ const EmployeesTable:FC<Props> = ({apiManager}: Props) => {
     isLoading,
   } = useQuery<Employee[], AxiosError>({
     queryKey,
-    queryFn: () => apiManager.getAll(searchObj),
+    queryFn: () => emplManager.getAll(searchObj),
     staleTime: 3600_000
   });
   if (error) {
     throw error;
   }
 
-  const mutationDel = useEmployeesMutation((id:unknown)=>apiManager.deleteEmployee(id as string));
-  const mutationUpdate = useEmployeesMutation((updater:unknown) => apiManager.updateEmployee(updater as Updater));
+  const mutationDel = useEmployeesMutation((id:unknown)=>emplManager.deleteEmployee(id as string));
+  const mutationUpdate = useEmployeesMutation((updater:unknown) => emplManager.updateEmployee(updater as Updater));
 
   const page = useEmployeesPagination(s => s.page);
   const setCount = useEmployeesPagination(s => s.setCount);

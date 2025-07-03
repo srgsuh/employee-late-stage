@@ -11,3 +11,5 @@ export default interface ApiClient {
     updateEmployee(updater: Updater): Promise<Employee>;
     setToken(token:string):void
 }
+
+export type ApiClientShort = Pick<ApiClient, "getAll" | "deleteEmployee" | "updateEmployee">;
