@@ -1,4 +1,4 @@
-import {Button, CloseButton, Dialog, Portal, useDisclosure} from "@chakra-ui/react"
+import {Button, CloseButton, Dialog, Portal} from "@chakra-ui/react"
 import {useColorModeValue} from "./ui/color-mode.tsx";
 
 interface AlertDialogProps {
@@ -13,11 +13,6 @@ const AlertDialog =
     const alertBgColor = useColorModeValue("red.500", "red.300");
     const cancelBgColor = useColorModeValue("gray.700", "gray.400");
 
-    const { onClose } = useDisclosure();
-    const handleConfirm = () => {
-        onClose();
-        onConfirm();
-    }
     return (
         <Dialog.Root role="alertdialog">
             <Dialog.Trigger asChild>
@@ -52,7 +47,7 @@ const AlertDialog =
                             <Dialog.ActionTrigger asChild>
                                 <Button
                                     background={alertBgColor}
-                                    color={"black"} onClick={handleConfirm}>Delete
+                                    color={"black"} onClick={onConfirm}>Delete
                                 </Button>
                             </Dialog.ActionTrigger>
                         </Dialog.Footer>
