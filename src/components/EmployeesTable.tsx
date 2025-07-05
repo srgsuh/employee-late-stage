@@ -45,15 +45,7 @@ const EmployeesTable:FC<Props> = ({emplManager}: Props) => {
     throw error;
   }
 
-  const longTimeDel = (id:unknown)=>{
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve(emplManager.deleteEmployee(id as string));
-      }, 2000);
-    });
-  }
-
-  const mutationDel = useEmployeesMutation(longTimeDel);
+  const mutationDel = useEmployeesMutation((id:unknown)=>emplManager.deleteEmployee(id as string));
   const mutationUpdate = useEmployeesMutation((updater:unknown) => emplManager.updateEmployee(updater as Updater));
 
   const page = useEmployeesPagination(s => s.page);
